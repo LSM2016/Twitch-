@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一个分享游戏时刻的地方">
+    <title>{% block title %}Game Room{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Bootstrap core JavaScript -->
+<script src="{% static '/js/jquery.min.js' %}"></script>
+<script src="{% static '/js/bootstrap.min.js' %}"></script>
+<nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient">
+    <div class="container"><a class="navbar-brand logo" href="/">游戏间</a>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav"><span class="sr-only">Toggle navigation</span><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse"
+             id="navbarNav">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item" role="presentation"><a class="nav-link" href="/">主页</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/submit">投稿</a>
+                    </li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/logout">登出</a>
+                    </li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/macie">Twitch剪辑</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/login">登录</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/register">注册</a></li>
+                {% endif %}
+
+
+            </ul>
+        </div>
+    </div>
+</nav>
+{% block content %}
+{% endblock %}
+<footer class="page-footer">
+    <div class="container">
+        <div class="links"><a href="https://space.bilibili.com/1932102">关于我</a><a href="mailto:rainbow6s@126.com">联系我</a><a href="#">其他项目</a></div>
+        <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i
+                class="icon ion-social-instagram-outline"></i></a><a href="#"><i
+                class="icon ion-social-twitter"></i></a></div>
+    </div>
+</footer>
+
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/js/bootstrap.bundle.min.js"></script>-->
+<script src="{% static "js/script.min.js" %}"></script>
+<!--Bootstrap-->
+
+<!--script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script-->
+
+</body>
+
+</html>

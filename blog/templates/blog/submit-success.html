@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Game Room - 游戏间,游戏时刻分享站{% endblock %}
+
+{% block content %}
+    {% load static %}
+<main class="page lanidng-page">
+    <section class="portfolio-block block-intro">
+        <div class="container">
+            <div class="about-me">
+                <p>恭喜你 <strong>{{ user }}</strong>，投稿成功了！</p>
+                <p> 我会尽快将视频转码，然后加入<strong>观看视频</strong>的新功能嗷！</p><a class="btn btn-outline-primary"
+                                                                                 role="button" href="/submit">投稿</a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

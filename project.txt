@@ -1,0 +1,6 @@
+ClipManager
+->Get daily Clips
+->Get All Clips
+->Get daily 20 Clips
+->Get daily Clips with more than 5 Views
+

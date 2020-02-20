@@ -1,0 +1,1 @@
+﻿celery -A clipmanager worker --pool=solo --loglevel=INFO

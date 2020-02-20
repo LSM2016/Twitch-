@@ -1,0 +1,228 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Game Room - 游戏间,游戏时刻分享站{% endblock %}
+{% block pagename %}Clip管理器{% endblock %}
+{% block content %}
+    <link href=" https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css"
+          rel="stylesheet"/>
+    <!-- 阿里WEB播放器 -->
+    <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.8.7/skins/default/aliplayer-min.css"/>
+    <script type="text/javascript" charset="utf-8"
+            src="https://g.alicdn.com/de/prismplayer/2.8.7/aliplayer-min.js"></script>
+    <!-- 日期选择器 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    {% load static %}
+    <script src="{% static "js/jquery.range.js" %}"></script>
+    <link rel="stylesheet" href="{% static "css/jquery.range.css" %}"/>
+
+    <style>
+        .col-center-block {
+            float: none;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-shadow {
+            max-width: none;
+            padding: 20px;
+            margin: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+        }
+
+        .button-card-shadow {
+            max-width: 650px;
+            padding: 20px;
+            margin: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+        }
+
+        .video-card-shadow {
+            max-width: 900px;
+            padding: 20px;
+            margin: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+        }
+    </style>
+    <main class="page projects-page">
+        <section class="portfolio-block projects-cards">
+            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+                 aria-hidden="true" id="myModal">
+                <div class="modal-dialog modal-lg modal-dialog-centered video-card-shadow">
+                    <div class="modal-content" id="video-modal">
+                        <h3 id="video-title" class="col-center-block"></h3>
+                        <div id="player-con" class="col-center-block"></div>
+                        {% if review %}
+                            <div class="col-center-block"><p></p></div>
+                            <div class="col-center-block "><input type="hidden" id="slider-input-min" value="23"/>
+                                <input type="hidden" id="slider-input-max" value="23"/>
+                                <input class="range-slider" type="hidden" value="0,100" style="display: none"></input>
+                            </div>
+                            <div class="col-center-block"><p></p></div>
+
+                            <div class="col-center-block"><p><a class="btn btn-outline-success" onclick=""
+                                                                id="video-card-accept">接受</a><a onclick=""
+                                                                                                class="btn btn-outline-danger"
+                                                                                                id="video-card-reject">
+                                拒绝</a></p></div>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="heading">
+                    <div class="button-card-shadow">
+                        <h2>Twitch Clip管理</h2>
+                        <h3 href="/macie">MacieJay</h3>
+                        <p><a href="/update_macie_daily">更新每天</a>/<a href="/update_macie">更新每周</a>/<a
+                                href="/update_download_url">更新下载地址</a>/<a
+                                href="/update_clip_views">更新观看数</a></p>
+                        <p><a href="/macie_reviewed">已接受+未下载</a>/<a href="/macie_downloaded">已下载</a></p>
+                        <p><a href="/download_clips">开始下载</a></p>
+                    </div>
+
+                </div>
+                <form method="post" class="card-shadow">
+                    {% csrf_token %}
+                    <div class="justify-content-center">
+                        <div id="event_period">
+                            <a type="text" class="actual_range" name="start"></a>
+                            <input type="text" class="actual_range" name="start" hidden>
+                            <input type="text" class="actual_range col-center-block" name="end">
+                        </div>
+                        <h2></h2>
+                        <button class="btn btn-primary col-center-block" type="submit">查询</button>
+                    </div>
+                </form>
+
+                <div class="row card-shadow" id="clip-container">
+                    {% for item in clips %}
+                        <div class="col-md-6 col-lg-4" id="clip-card-{{ item.slug }}">
+                            <div class="card border-0"><a data-toggle="modal" data-target=".bd-example-modal-lg"
+                                                          onclick="change('{{ item.download_url }}','{{ item.title }}','{{ item.slug }}')"><img
+                                    src="{{ item.medium_thumbnail }}" alt="Card Image"
+                                    class="card-img-top scale-on-hover"></a>
+                                <div class="card-body">
+                                    <h6><a href="#">{{ item.title }}</a></h6>
+                                    <p class="text-muted card-text">
+                                        {% if review %}
+                                            <a class="btn btn-outline-success"
+                                               onclick="accept('{{ item.slug }}')">接受</a>
+                                        {% endif %}
+                                        <a class="btn btn-outline-danger" onclick="reject('{{ item.slug }}')">拒绝</a>
+
+                                        观看数:{{ item.views }}
+                                        <a href="{{ item.download_url }}">下载</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function reject(slug) {
+            my = document.getElementById('clip-card-' + slug)
+            $('#myModal').modal('hide')
+            if (my != null)
+                my.parentNode.removeChild(my);
+
+            console.log(slug)
+            $.ajax({
+                url: '/ajax_macie',
+                type: 'GET',
+                data: {'slug': slug, 'action': 'reject'},
+                success: function (arg) {
+                    console.log(arg)
+                }
+            })
+        }
+
+        function accept(slug) {
+            console.log(slug)
+            my = document.getElementById('clip-card-' + slug)
+            $('#myModal').modal('hide')
+            if (my != null)
+                my.parentNode.removeChild(my);
+            $.ajax({
+                url: '/ajax_macie',
+                type: 'GET',
+                data: {'slug': slug, 'action': 'accept'},
+                success: function (arg) {
+                    console.log(arg)
+                }
+            })
+        }
+
+        function range() {
+            video_duration = player.getDuration();
+
+            $('.range-slider').jRange({
+                from: 0,
+                to: video_duration,
+                step: 0.3,
+                scale: [0,  video_duration],
+                format: '%s',
+                width: 800,
+                showLabels: true,
+                isRange: true
+            });
+        }
+
+        var player = new Aliplayer({
+            id: "player-con",
+            source: "",
+            width: "800px",
+            height: "450px",
+            //cover: 'https://img.alicdn.com/tps/TB1EXIhOFXXXXcIaXXXXXXXXXXX-760-340.jpg',
+            /* To set an album art, you must set 'autoplay' and 'preload' to 'false' */
+            autoplay: true,
+            preload: false,
+            isLive: false
+        }, function (player) {
+            console.log("The player is created");
+        });
+
+        function change(videourl, title, slug) {
+            player.loadByUrl(videourl)
+            document.getElementById('video-title').innerHTML = title
+            //document.getElementById('video-card-accept').onclick = "accept(" + slug + ")"
+            //document.getElementById('video-card-reject').onclick = "reject(" + slug + ")"
+            $('#video-card-accept').attr('onclick', "accept('" + slug + "')")
+            $('#video-card-reject').attr('onclick', "reject('" + slug + "')")
+            setTimeout(function(){
+                video_duration = player.getDuration();
+                //alert(video_duration);
+            },100)
+            setTimeout(function(){
+                range();
+            },100)
+
+
+        }
+
+        $("#myModal").on("hidden.bs.modal", function () {
+            // put your default event here
+            //alert('hidden')
+            player.pause();
+        });
+
+        $('[type="date"]').datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            startDate: "today",
+            clearBtn: true,
+            calendarWeeks: true,
+            todayHighlight: true,
+            language: 'zh-CN'
+        });
+        $('#event_period').datepicker({
+            inputs: $('.actual_range')
+        });
+    </script>
+
+{% endblock %}

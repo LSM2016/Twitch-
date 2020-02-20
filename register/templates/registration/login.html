@@ -1,0 +1,22 @@
+{% extends "blog/base.html" %}
+
+{% block title %}
+    登录
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <main class="page lanidng-page">
+        <section class="portfolio-block block-intro">
+            <div class="container">
+                <form method="post" class="form-group">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <p>没有账户？<a href="/register">注册</a>一个！</p>
+                    <button type="submit" class="btn btn-success">登录</button>
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock %}

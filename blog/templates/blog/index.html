@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Game Room - 游戏间,游戏时刻分享站{% endblock %}
+
+{% block content %}
+    {% load static %}
+<main class="page lanidng-page">
+    <section class="portfolio-block block-intro">
+        <div class="container">
+            <div class="avatar"
+                 style="background-image:url({% static '/img/avatars/avatar.jpg' %});"></div>
+            <div class="about-me">
+                <p>大家好! 我是 <strong>溪木的龙裔</strong>，投稿系统写的有点久。 写这个系统的目的
+                    就是为了大家更方便地分享自己的精彩瞬间！遇到BUG的可以给我发邮件哦！</p><a class="btn btn-outline-primary"
+                                                                                 role="button" href="/submit">投稿</a>
+            </div>
+        </div>
+    </section>
+    <section class="portfolio-block photography">
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-md-6 col-lg-4 item zoom-on-hover"><a href="#"><img class="img-fluid image"
+                                                                                   src="{% static '/img/nature/image1.jpg' %}"></a>
+                </div>
+                <div class="col-md-6 col-lg-4 item zoom-on-hover"><a href="#"><img class="img-fluid image"
+                                                                                   src="{% static '/img/nature/image3.jpg' %}"></a>
+                </div>
+                <div class="col-md-6 col-lg-4 item zoom-on-hover"><a href="#"><img class="img-fluid image"
+                                                                                   src="{% static '/img/nature/image2.jpg' %}"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="portfolio-block call-to-action border-bottom">
+        <div class="container">
+            <div class="d-flex justify-content-center align-items-center content">
+                <h3>准备好投稿了吗？</h3>
+                <a href="/submit" class="btn btn-outline-primary btn-lg">投稿</a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
